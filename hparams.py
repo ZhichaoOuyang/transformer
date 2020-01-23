@@ -4,9 +4,9 @@ class Hparams:
     parser = argparse.ArgumentParser()
 
     # prepro
-    parser.add_argument('--vocab_size', default=32000, type=int)
+    parser.add_argument('--vocab_size', default=50000, type=int)
 
-    # train
+    # train...............................................................................................................................................................2
     ## files
     parser.add_argument('--train1', default='iwslt2016/segmented/train.de.bpe',
                              help="german training segmented data")
@@ -29,7 +29,7 @@ class Hparams:
 
     parser.add_argument('--lr', default=0.0003, type=float, help="learning rate")
     parser.add_argument('--warmup_steps', default=4000, type=int)
-    parser.add_argument('--logdir', default="log/1", help="log directory")
+    parser.add_argument('--logdir', default="log/1", help="log directory")   # 保存日志的路径
     parser.add_argument('--num_epochs', default=20, type=int)
     parser.add_argument('--evaldir', default="eval/1", help="evaluation dir")
 

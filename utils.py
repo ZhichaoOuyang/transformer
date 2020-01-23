@@ -83,7 +83,7 @@ def save_hparams(hparams, path):
     '''
     if not os.path.exists(path): os.makedirs(path)
     hp = json.dumps(vars(hparams))
-    with open(os.path.join(path, "hparams"), 'w') as fout:
+    with open(os.path.join(path, "hparams"), 'w', encoding='utf-8') as fout:
         fout.write(hp)
 
 def load_hparams(parser, path):
@@ -93,7 +93,7 @@ def load_hparams(parser, path):
     '''
     if not os.path.isdir(path):
         path = os.path.dirname(path)
-    d = open(os.path.join(path, "hparams"), 'r').read()
+    d = open(os.path.join(path, "hparams"), 'r', encoding='utf-8').read()
     flag2val = json.loads(d)
     for f, v in flag2val.items():
         parser.f = v
@@ -123,7 +123,7 @@ def save_variable_specs(fpath):
         params.append("{}==={}".format(v.name, v.shape))
         num_params += _get_size(v.shape)
     print("num_params: ", num_params)
-    with open(fpath, 'w') as fout:
+    with open(fpath, 'w', encoding='utf-8') as fout:
         fout.write("num_params: {}\n".format(num_params))
         fout.write("\n".join(params))
     logging.info("Variables info has been saved.")
@@ -156,8 +156,8 @@ def calc_bleu(ref, translation):
     translation that the bleu score is appended to'''
     get_bleu_score = "perl multi-bleu.perl {} < {} > {}".format(ref, translation, "temp")
     os.system(get_bleu_score)
-    bleu_score_report = open("temp", "r").read()
-    with open(translation, "a") as fout:
+    bleu_score_report = open("temp", "r", encoding='utf-8').read()
+    with open(translation, "a", encoding='utf-8') as fout:
         fout.write("\n{}".format(bleu_score_report))
     try:
         score = re.findall("BLEU = ([^,]+)", bleu_score_report)[0]

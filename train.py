@@ -20,10 +20,10 @@ logging.basicConfig(level=logging.INFO)
 
 
 logging.info("# hparams")
-hparams = Hparams()
+hparams = Hparams()    # 加载超参数
 parser = hparams.parser
-hp = parser.parse_args()
-save_hparams(hp, hp.logdir)
+hp = parser.parse_args()   # 超参数内容都在这里
+save_hparams(hp, hp.logdir)   # 保存超参数信息
 
 logging.info("# Prepare train/eval batches")
 train_batches, num_train_batches, num_train_samples = get_batch(hp.train1, hp.train2,

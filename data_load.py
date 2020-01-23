@@ -21,7 +21,7 @@ def load_vocab(vocab_fpath):
     Returns
     two dictionaries.
     '''
-    vocab = [line.split()[0] for line in open(vocab_fpath, 'r').read().splitlines()]
+    vocab = [line.split()[0] for line in open(vocab_fpath, 'r', encoding='utf-8').read().splitlines()]
     token2idx = {token: idx for idx, token in enumerate(vocab)}
     idx2token = {idx: token for idx, token in enumerate(vocab)}
     return token2idx, idx2token
@@ -38,13 +38,13 @@ def load_data(fpath1, fpath2, maxlen1, maxlen2):
     sents2: list of target sents
     '''
     sents1, sents2 = [], []
-    with open(fpath1, 'r') as f1, open(fpath2, 'r') as f2:
+    with open(fpath1, 'r', encoding='utf-8') as f1, open(fpath2, 'r', encoding='utf-8') as f2:
         for sent1, sent2 in zip(f1, f2):
             if len(sent1.split()) + 1 > maxlen1: continue # 1: </s>
             if len(sent2.split()) + 1 > maxlen2: continue  # 1: </s>
             sents1.append(sent1.strip())
             sents2.append(sent2.strip())
-    return sents1, sents2
+    return sents1, sents2      # 得到source 和 tgt里的sample
 
 
 def encode(inp, type, dict):
@@ -80,7 +80,7 @@ def generator_fn(sents1, sents2, vocab_fpath):
         y_seqlen: int. sequence length of y
         sent2: str. target sentence
     '''
-    token2idx, _ = load_vocab(vocab_fpath)
+    token2idx, _ = load_vocab(vocab_fpath)    # 加载词汇表,词:id
     for sent1, sent2 in zip(sents1, sents2):
         x = encode(sent1, "x", token2idx)
         y = encode(sent2, "y", token2idx)
@@ -129,6 +129,7 @@ def input_fn(sents1, sents2, vocab_fpath, batch_size, shuffle=False):
 
     return dataset
 
+# de -> en
 def get_batch(fpath1, fpath2, maxlen1, maxlen2, vocab_fpath, batch_size, shuffle=False):
     '''Gets training / evaluation mini-batches
     fpath1: source file path. string.
@@ -144,7 +145,7 @@ def get_batch(fpath1, fpath2, maxlen1, maxlen2, vocab_fpath, batch_size, shuffle
     num_batches: number of mini-batches
     num_samples
     '''
-    sents1, sents2 = load_data(fpath1, fpath2, maxlen1, maxlen2)
+    sents1, sents2 = load_data(fpath1, fpath2, maxlen1, maxlen2)   # 得到sample
     batches = input_fn(sents1, sents2, vocab_fpath, batch_size, shuffle=shuffle)
     num_batches = calc_num_batches(len(sents1), batch_size)
-    return batches, num_batches, len(sents1)
+    return batches, num_batches, len(sents1)               # 数据
